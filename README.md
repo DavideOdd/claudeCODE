@@ -4,20 +4,38 @@ Una web app che utilizza la fotocamera per tracciare la posizione del corpo in t
 
 ## Caratteristiche
 
+### Tracking Avanzato
 - 🎥 Accesso alla webcam in tempo reale
 - 🤖 Rilevamento della posizione del corpo usando MediaPipe Pose
-- 🎨 Visualizzazione stickman SVG animato
-- 📊 Overlay dei landmark sul video
+- 👁️ **Tracking del volto con occhi e bocca**
+- 🤲 **Tracking delle mani opzionale** (attivabile/disattivabile)
+- 📱 **Switch camera frontale/posteriore** per dispositivi mobile
+
+### Visualizzazione
+- 🎨 Stickman SVG con **linee nere spesse** e design pulito
+- 👤 Dettagli facciali (occhi e bocca) sullo stickman
+- ✋ Rappresentazione delle dita quando il tracking mani è attivo
+- 📊 Overlay dei landmark sul video in tempo reale
+
+### Esportazione
+- 📷 **Snapshot SVG statico** - Salva la posa corrente come file SVG
+- 🎬 **Registrazione animazione** - Registra i movimenti e esporta SVG animato
+
+### Design
 - 📱 Design responsive
 - 🎯 Interfaccia intuitiva
+- 🎨 Controlli chiari e ben organizzati
 
 ## Tecnologie Utilizzate
 
 - **HTML5**: Struttura della pagina
-- **CSS3**: Styling e layout responsive
-- **JavaScript**: Logica dell'applicazione
-- **MediaPipe Pose**: Libreria di Google per il rilevamento della posizione del corpo
-- **SVG**: Grafica vettoriale per lo stickman
+- **CSS3**: Styling e layout responsive con animazioni
+- **JavaScript ES6+**: Logica dell'applicazione
+- **MediaPipe Pose**: Rilevamento della posizione del corpo (33 landmark)
+- **MediaPipe Hands**: Rilevamento delle mani e dita (21 landmark per mano)
+- **MediaPipe Face Mesh**: Rilevamento dettagliato del volto (468 landmark)
+- **SVG**: Grafica vettoriale scalabile per lo stickman
+- **WebRTC**: Accesso alla fotocamera del dispositivo
 
 ## Come Usare
 
@@ -74,11 +92,37 @@ http-server -p 8000
 
 ### Utilizzo
 
-1. Clicca sul pulsante "Avvia Fotocamera"
+#### Avvio Tracking
+1. Clicca sul pulsante **"Avvia Fotocamera"**
 2. Concedi i permessi per l'accesso alla webcam quando richiesto
 3. Posizionati davanti alla fotocamera
-4. Osserva lo stickman SVG che replica i tuoi movimenti in tempo reale
-5. Clicca su "Ferma Fotocamera" per terminare
+4. Osserva lo stickman SVG che replica i tuoi movimenti in tempo reale con dettagli del volto (occhi e bocca)
+
+#### Controlli Disponibili
+
+**Switch Camera** (Mobile)
+- Clicca su **"Cambia Camera"** per passare tra fotocamera frontale e posteriore
+- Utile su smartphone e tablet con multiple fotocamere
+
+**Tracking Mani**
+- Attiva/disattiva il toggle **"Tracking Mani"** per abilitare il rilevamento delle dita
+- Quando attivo, lo stickman mostrerà anche le 5 dita di ciascuna mano
+- Disattivalo per migliorare le prestazioni se non necessario
+
+**Snapshot SVG Statico**
+- Clicca su **"📷 Foto Stickman"** per salvare la posa corrente
+- Scarica automaticamente un file SVG statico della posizione attuale
+- Perfetto per salvare pose specifiche
+
+**Registrazione Animazione**
+- Clicca su **"🔴 Avvia Registrazione"** per iniziare a registrare i tuoi movimenti
+- Esegui i movimenti che vuoi catturare
+- Clicca su **"⏹️ Ferma Registrazione"** per terminare
+- Scarica automaticamente un file SVG animato che riproduce in loop i movimenti registrati
+- Ideale per creare animazioni di esercizi, danze, o movimenti specifici
+
+**Ferma Tracking**
+- Clicca su **"Ferma Fotocamera"** per terminare e disattivare la webcam
 
 ## Struttura del Progetto
 
@@ -92,23 +136,40 @@ http-server -p 8000
 
 ## Come Funziona
 
-1. **Accesso alla Fotocamera**: L'app richiede l'accesso alla webcam usando l'API WebRTC
-2. **Rilevamento Pose**: MediaPipe Pose analizza ogni frame per rilevare 33 landmark del corpo
-3. **Elaborazione Dati**: I landmark vengono estratti e normalizzati
-4. **Rendering SVG**: Lo stickman SVG viene aggiornato in tempo reale con le coordinate rilevate
-5. **Visualizzazione**: Il video mostra i landmark sovrapposti e l'SVG mostra lo stickman animato
+1. **Accesso alla Fotocamera**: L'app richiede l'accesso alla webcam usando l'API WebRTC (getUserMedia)
+2. **Rilevamento Multi-Modello**:
+   - **MediaPipe Pose**: Analizza ogni frame per rilevare 33 landmark del corpo
+   - **MediaPipe Face Mesh**: Rileva 468 landmark facciali (usati per occhi e bocca)
+   - **MediaPipe Hands** (opzionale): Rileva 21 landmark per ciascuna mano
+3. **Elaborazione Dati**: I landmark vengono estratti, normalizzati e combinati
+4. **Rendering SVG**: Lo stickman SVG viene aggiornato in tempo reale con:
+   - Posizione del corpo (testa, busto, braccia, gambe)
+   - Dettagli facciali (occhi e bocca)
+   - Dita delle mani (se attivato)
+5. **Visualizzazione**: Il video mostra i landmark sovrapposti e l'SVG mostra lo stickman con linee nere spesse
+6. **Esportazione**:
+   - **Snapshot**: Cattura l'SVG corrente e lo serializza come file scaricabile
+   - **Animazione**: Registra fotogrammi con timestamp e li esporta come SVG animato con CSS keyframes
 
 ## Landmark Utilizzati
 
-L'applicazione traccia i seguenti punti del corpo:
+L'applicazione traccia i seguenti punti in tempo reale:
 
-- Testa (naso)
-- Spalle (sinistra e destra)
-- Gomiti (sinistro e destro)
-- Polsi (sinistro e destro)
-- Anche (sinistra e destra)
-- Ginocchia (sinistra e destra)
-- Caviglie (sinistra e destra)
+### Corpo (MediaPipe Pose - 33 landmark)
+- **Testa**: Naso, occhi, orecchie
+- **Busto**: Spalle (sinistra e destra)
+- **Braccia**: Gomiti e polsi (sinistro e destro)
+- **Anche**: Anche (sinistra e destra) - punto centrale del bacino
+- **Gambe**: Ginocchia e caviglie (sinistra e destra)
+
+### Volto (MediaPipe Face Mesh - 468 landmark)
+- **Occhi**: Posizione occhio sinistro e destro
+- **Bocca**: Contorno bocca per espressioni facciali
+
+### Mani (MediaPipe Hands - 21 landmark per mano) *[Opzionale]*
+- **Polso**: Base della mano
+- **Dita**: Pollice, indice, medio, anulare, mignolo
+- **Articolazioni**: Tutte le giunture delle dita
 
 ## Browser Supportati
 
@@ -119,40 +180,109 @@ L'applicazione traccia i seguenti punti del corpo:
 
 ## Note Importanti
 
-- È necessaria una buona illuminazione per un tracking ottimale
-- La fotocamera deve essere posizionata frontalmente
-- L'intero corpo deve essere visibile per un tracking completo
-- Le prestazioni dipendono dalla potenza del dispositivo
+### Per il Tracking Ottimale
+- È necessaria una **buona illuminazione** per un tracking accurato
+- La fotocamera deve essere posizionata **frontalmente** per catturare tutto il corpo
+- L'intero corpo deve essere **visibile** per un tracking completo
+- Mantieni una **distanza adeguata** dalla fotocamera (circa 1.5-2 metri)
+
+### Prestazioni
+- Le prestazioni dipendono dalla **potenza del dispositivo**
+- Il tracking delle **mani** richiede più risorse - attivalo solo se necessario
+- Su dispositivi meno potenti, considera di disattivare il tracking mani
+- Il rilevamento del volto (Face Mesh) ha un impatto minimo sulle prestazioni
+
+### Esportazione SVG
+- **Snapshot**: Salva immediatamente la posa corrente come SVG statico
+- **Animazione**: Registra fino a 30 fps - durata consigliata 5-30 secondi
+- I file SVG esportati sono **vettoriali** e scalabili senza perdita di qualità
+- Le animazioni usano **CSS keyframes** e sono compatibili con tutti i browser moderni
+- Gli SVG possono essere modificati con qualsiasi editor vettoriale (Inkscape, Illustrator, etc.)
 
 ## Risoluzione Problemi
 
 ### La fotocamera non si avvia
 
-- Verifica i permessi della fotocamera nel browser
-- Assicurati di usare HTTPS o localhost
+- Verifica i permessi della fotocamera nel browser (Settings > Privacy > Camera)
+- Assicurati di usare **HTTPS** o **localhost** (richiesto da WebRTC)
 - Controlla che nessun'altra app stia usando la fotocamera
+- Prova a ricaricare la pagina (F5)
 
-### Il tracking è lento
+### Il tracking è lento o a scatti
 
-- Prova a ridurre la complessità del modello in `app.js` (modelComplexity: 0)
-- Chiudi altre schede del browser
-- Usa un dispositivo più potente
+- **Disattiva il tracking mani** se non necessario (migliora notevolmente le prestazioni)
+- Riduci la complessità del modello in `app.js` (modelComplexity: 0)
+- Chiudi altre schede del browser e applicazioni pesanti
+- Usa un dispositivo più potente o prova su desktop invece che mobile
 
-### Lo stickman non si muove
+### Lo stickman non si muove o non appare
 
-- Assicurati di essere completamente visibile nella fotocamera
-- Migliora l'illuminazione
-- Controlla la console del browser per errori
+- Assicurati di essere **completamente visibile** nella fotocamera
+- Migliora l'**illuminazione** dell'ambiente
+- Allontanati dalla fotocamera (distanza ideale: 1.5-2 metri)
+- Controlla la console del browser per errori (F12 > Console)
+
+### Gli occhi/bocca non vengono tracciati
+
+- Il tuo **viso deve essere ben illuminato** e visibile
+- Guarda direttamente verso la fotocamera
+- Face Mesh richiede qualche secondo per inizializzare - attendi
+
+### Il tracking delle mani non funziona
+
+- Assicurati che il **toggle "Tracking Mani" sia attivo** (verde)
+- Le mani devono essere **ben visibili** e illuminate
+- Non sovrapporre le mani tra loro
+- MediaPipe Hands rileva max 2 mani contemporaneamente
+
+### "Cambia Camera" non funziona
+
+- Questa funzione è disponibile solo su **dispositivi con multiple fotocamere** (smartphone/tablet)
+- Su desktop con una sola webcam, il bottone sarà disabilitato
+
+### Il download SVG non parte
+
+- Controlla le **impostazioni download** del browser
+- Alcuni browser bloccano i download automatici - controlla le notifiche
+- Verifica di avere spazio sufficiente sul dispositivo
 
 ## Personalizzazione
 
 ### Cambiare i colori dello stickman
 
-Modifica in `index.html` gli attributi `stroke` e `fill` degli elementi SVG:
+Lo stickman usa linee **nere spesse** per impostazione predefinita. Per modificare i colori, modifica in `index.html` gli attributi `stroke` degli elementi SVG:
 
 ```html
-<line id="spine" stroke="#00ff00" />  <!-- Verde -->
-<circle id="head" stroke="#ff0000" /> <!-- Rosso -->
+<!-- Cambia il colore delle linee del corpo -->
+<line id="spine" stroke="#000000" stroke-width="6" />  <!-- Nero (default) -->
+<line id="spine" stroke="#FF0000" stroke-width="6" />  <!-- Rosso -->
+<line id="spine" stroke="#0066FF" stroke-width="6" />  <!-- Blu -->
+
+<!-- Cambia il colore degli occhi -->
+<circle id="leftEye" fill="#000000" />  <!-- Nero (default) -->
+<circle id="leftEye" fill="#FFFFFF" />  <!-- Bianco -->
+```
+
+### Cambiare lo sfondo dell'SVG
+
+In `styles.css`, modifica il background dello stickman:
+
+```css
+#stickman {
+    background: #ffffff;  /* Bianco (default) */
+    background: #f0f0f0;  /* Grigio chiaro */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);  /* Gradiente */
+}
+```
+
+### Modificare lo spessore delle linee
+
+In `index.html`, cambia l'attributo `stroke-width`:
+
+```html
+<line id="spine" stroke-width="6" />  <!-- Spesso (default) -->
+<line id="spine" stroke-width="3" />  <!-- Medio -->
+<line id="spine" stroke-width="10" /> <!-- Molto spesso -->
 ```
 
 ### Modificare la sensibilità del tracking
@@ -160,10 +290,27 @@ Modifica in `index.html` gli attributi `stroke` e `fill` degli elementi SVG:
 In `app.js`, modifica le opzioni di MediaPipe:
 
 ```javascript
+// Pose tracking
 pose.setOptions({
     modelComplexity: 1,  // 0, 1, o 2 (più alto = più accurato ma più lento)
     minDetectionConfidence: 0.5,  // 0.0 - 1.0
     minTrackingConfidence: 0.5    // 0.0 - 1.0
+});
+
+// Hands tracking
+hands.setOptions({
+    maxNumHands: 2,  // Numero massimo di mani da rilevare
+    modelComplexity: 1,  // 0 o 1
+    minDetectionConfidence: 0.5,
+    minTrackingConfidence: 0.5
+});
+
+// Face Mesh
+faceMesh.setOptions({
+    maxNumFaces: 1,  // Numero massimo di visi da rilevare
+    refineLandmarks: true,  // true per maggior precisione (occhi, labbra)
+    minDetectionConfidence: 0.5,
+    minTrackingConfidence: 0.5
 });
 ```
 
@@ -173,8 +320,11 @@ Questo progetto è open source e disponibile sotto licenza MIT.
 
 ## Crediti
 
-- MediaPipe Pose: Google MediaPipe Team
-- Icone e design: Progetto originale
+- **MediaPipe Pose**: Google MediaPipe Team
+- **MediaPipe Hands**: Google MediaPipe Team
+- **MediaPipe Face Mesh**: Google MediaPipe Team
+- Design e implementazione: Progetto originale
+- Librerie utilizzate: MediaPipe, WebRTC
 
 ## Supporto
 

@@ -33,9 +33,18 @@ h2 {
 
 .controls {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     gap: 15px;
     margin-bottom: 30px;
+}
+
+.control-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 
 button {
@@ -73,6 +82,105 @@ button {
 button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+#switchCameraBtn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+}
+
+#switchCameraBtn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+#snapshotBtn {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: #fff;
+}
+
+#snapshotBtn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+}
+
+#startRecordBtn {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    color: #fff;
+}
+
+#startRecordBtn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(250, 112, 154, 0.4);
+}
+
+#stopRecordBtn {
+    background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+    color: #fff;
+}
+
+#stopRecordBtn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+}
+
+.toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.toggle-container:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.toggle-container input[type="checkbox"] {
+    width: 50px;
+    height: 26px;
+    appearance: none;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 13px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.toggle-container input[type="checkbox"]:checked {
+    background: linear-gradient(135deg, #00ff88 0%, #00cc6f 100%);
+}
+
+.toggle-container input[type="checkbox"]::before {
+    content: '';
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s ease;
+}
+
+.toggle-container input[type="checkbox"]:checked::before {
+    transform: translateX(24px);
+}
+
+.toggle-container input[type="checkbox"]:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.toggle-label {
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    user-select: none;
 }
 
 .content {
@@ -118,9 +226,10 @@ button:disabled {
 #stickman {
     width: 100%;
     height: auto;
-    background: rgba(0, 0, 0, 0.5);
+    background: #ffffff;
     border-radius: 10px;
     display: block;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 .status {
@@ -148,11 +257,17 @@ button:disabled {
         font-size: 1.5rem;
     }
 
-    .controls {
+    .control-row {
         flex-direction: column;
+        width: 100%;
     }
 
     button {
         width: 100%;
+    }
+
+    .toggle-container {
+        width: 100%;
+        justify-content: center;
     }
 }
