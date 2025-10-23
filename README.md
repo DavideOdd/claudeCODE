@@ -27,12 +27,25 @@ Una web app che utilizza la fotocamera per tracciare la posizione del corpo in t
 - Webcam funzionante
 - Connessione internet (per caricare le librerie MediaPipe)
 
-### Installazione
+### Opzione 1: GitHub Pages (Consigliato - Nessuna installazione!)
+
+Puoi usare l'app direttamente online senza installare nulla:
+
+1. Vai su **Settings** del repository GitHub
+2. Nella sezione **Pages** (menu laterale sinistro)
+3. In **Source**, seleziona il branch `claude/camera-position-tracking-011CUQ9vPhwzk1a9zHMLkbVY`
+4. Clicca **Save**
+5. Dopo qualche minuto, GitHub fornirà un URL tipo: `https://[username].github.io/[repository]/`
+6. Visita l'URL e usa l'app direttamente dal browser!
+
+**Nota**: GitHub Pages richiede HTTPS, quindi la fotocamera funzionerà senza problemi.
+
+### Opzione 2: Installazione Locale
 
 1. Clona il repository o scarica i file
 2. Avvia un server locale nella directory del progetto
 
-#### Opzione 1: Python HTTP Server
+#### Con Python HTTP Server
 
 ```bash
 # Python 3
@@ -42,7 +55,7 @@ python -m http.server 8000
 python -m SimpleHTTPServer 8000
 ```
 
-#### Opzione 2: Node.js HTTP Server
+#### Con Node.js HTTP Server
 
 ```bash
 # Installa http-server globalmente
@@ -52,7 +65,7 @@ npm install -g http-server
 http-server -p 8000
 ```
 
-#### Opzione 3: VS Code Live Server
+#### Con VS Code Live Server
 
 - Installa l'estensione "Live Server" in VS Code
 - Click destro su `index.html` e seleziona "Open with Live Server"
